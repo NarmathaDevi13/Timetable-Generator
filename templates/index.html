@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>College Time Table Generator</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #fbc2eb, #f9a8d4);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    background: #fff0f6;
+    width: 85%;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+h1 {
+    color: #4b2c35;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #5a3d45;
+}
+
+input, select {
+    padding: 12px;
+    margin: 10px;
+    width: 220px;
+    border-radius: 10px;
+    border: 1px solid #f3c6d3;
+    background: #fff5f8;
+    transition: 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: #ff7eb3;
+    outline: none;
+    box-shadow: 0 0 6px #ffb6c1;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    background: linear-gradient(to right, #ff758c, #ff7eb3);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.subject-box {
+    background: #ffe4ec;
+    padding: 15px;
+    margin: 12px auto;
+    border-radius: 12px;
+    width: 80%;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+table {
+    width: 100%;
+    margin-top: 25px;
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+
+th {
+    background: linear-gradient(to right, #ff758c, #ff7eb3);
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+td {
+    background: #fff5f8;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎓 College Time Table Generator</h1>
+
+<form method="POST">
+
+<select name="department" required>
+  <option value="">Select Department</option>
+  <option>CSE</option>
+  <option>IT</option>
+  <option>ECE</option>
+  <option>EEE</option>
+  <option>MECH</option>
+  <option>AIML</option>
+  <option>CIVIL</option>
+  <option>CSBS</option>
+  <option>AIDS</option>
+</select>
+
+<select name="semester" required>
+  <option value="">Select Semester</option>
+  <option>I</option>
+  <option>II</option>
+  <option>III</option>
+  <option>IV</option>
+  <option>V</option>
+  <option>VI</option>
+  <option>VII</option>
+  <option>VIII</option>
+</select>
+
+<input name="section" placeholder="Section (A/B/C)" required>
+
+<br>
+
+<input name="n" placeholder="Number of Subjects" required>
+
+<div id="subjects"></div>
+
+<br>
+<button type="submit">Generate Timetable</button>
+
+</form>
+
+<script>
+document.querySelector("input[name='n']").addEventListener("change", function(){
+ let n = this.value;
+ let div = document.getElementById("subjects");
+ div.innerHTML = "";
+
+ for(let i=0;i<n;i++){
+  div.innerHTML += `
+  <div class="subject-box">
+    <h3>Subject ${i+1}</h3>
+    <input name="name${i}" placeholder="Subject Name" required>
+    <input name="hours${i}" placeholder="Hours" required>
+    <input name="credit${i}" placeholder="Credit" required>
+
+    <select name="type${i}">
+      <option>Theory</option>
+      <option>Lab</option>
+      <option>Integrated</option>
+    </select>
+
+    <input name="lab${i}" placeholder="Lab Hours (0 if none)" required>
+  </div>
+  `;
+ }
+});
+</script>
+
+{% if timetable %}
+
+<h2>
+{{department}} - Semester {{semester}} - Section {{section}}
+</h2>
+
+<table>
+<tr>
+<th>Day</th>
+<th>P1</th><th>P2</th><th>P3</th><th>P4</th>
+<th>P5</th><th>P6</th><th>P7</th><th>P8</th>
+</tr>
+
+{% for row in timetable %}
+<tr>
+<td><b>{{loop.index}}</b></td>
+{% for cell in row %}
+<td>{{cell}}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+
+<br>
+
+<a href="/download">
+<button>📄 Download PDF</button>
+</a>
+
+<a href="/download_excel">
+<button>📊 Download Excel</button>
+</a>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>
